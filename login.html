@@ -1,0 +1,183 @@
+<html><meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+<script type="text/javascript" src="js/functions.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>    
+<body>
+    <script>        
+        $(document).ready(function(){
+            $("#lbl_email").text("");
+            $("#lbl_password").text("");
+//            localStorage.setItem("message","");
+            
+            $("#lbl_message").text(localStorage.getItem("message"));
+            $("#btn_submit").click(function(){
+                    localStorage.setItem("message","");
+                    if($("#email").val()!=""){
+                        $("#lbl_email").text("");
+                        $("#lbl_password").text("");
+                        $.ajax( {
+                            type: "POST",
+                            url: "login_service.php",
+                            data: $("#insert_form").serialize(),                           
+                            success: function (data){
+                                localStorage.setItem("correct","Login successful!");
+                                window.location.href = "insert_login.html";
+                            },
+                            error: function(request, status, error){
+                                var obj = JSON.parse(request.responseText);
+
+                                switch (obj.message_code) {
+                                    case 1001:
+                                        
+                                        $("#lbl_password").text(obj.message);
+                                        break;
+                                    case 1002:
+                                      
+                                       $("#lbl_email").text(obj.message);
+                                        break;                                    
+                                }
+                            }
+                        });
+                    }
+                    else{                        
+                        $("#lbl_email").text("Please, enter your email!");                        
+                        
+                    }
+                });
+            
+            $("#btn_reset").click(function(){                
+                $('#insert_form').trigger("reset");
+                $("#lbl_email").text("");
+                $("#lbl_password").text("");
+                localStorage.setItem("message","");
+                $("#lbl_message").text(localStorage.getItem("message"));
+                localStorage.setItem("entered_email","");
+            });  
+            
+            $("#email").blur(function(){
+                
+                localStorage.setItem("entered_email",$("#email").val());
+                localStorage.setItem("message","");
+                $("#lbl_message").text(localStorage.getItem("message"));
+               
+            });   
+                
+            $("#btn_forgot").click(function(){
+                localStorage.setItem("entered_email",$("#email").val());
+                window.location.href = "forgot_password.html";
+                localStorage.setItem("message","");
+                $("#lbl_message").text(localStorage.getItem("message"));
+            });
+            $("#a_home").click(function(){
+                localStorage.setItem("message","");
+                window.location.href = "login.html";
+            });
+                
+        });
+        
+        
+        
+    </script>
+    <div class="header">
+        <h1>Log in</h1> 
+    </div>
+    <div class="topnav">
+        <a href="" id="a_home">Home</a>
+    </div> 
+    <div class="column left">
+        <h2>Left Side</h2>
+       
+        
+    </div>
+    <div class="column middle">   
+       
+        <h2>Header</h2>
+      
+        <form id="insert_form" name="insert_form" action="" method="post">
+            <div class="insert_data">
+                <table>
+                    <col width="25%">
+                    <col width="25%">
+                    <col width="50%"> 
+                    <tr>
+                        <td>       
+                            Email:
+                        </td>
+                        <td> 
+                            <input type="text" id="email" name="email" value=""> 
+                        </td>
+                        <td>
+                            <label id="lbl_email" style="padding-left: 10px"></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Password:
+                        </td>
+                        <td>
+                            <input type="password" id="password" name="password">
+                        </td>
+                        <td>
+                            <label id="lbl_password" style="padding-left: 10px"> </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                             
+                        </td>
+                        <td>
+                            <label id="lbl_message" style="padding-left: 10px"> </label>
+                        </td>
+                        <td>                        
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                           
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>                        
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            
+                        </td>
+                        <td>                            
+                        
+                        </td>
+                        <td>
+                           
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            
+                        </td>
+                        <td>
+                        
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" id="btn_reset" name="btn_reset">Reset</button>
+                        </td>
+                        <td>
+                            <button type="button" id="btn_forgot" name="btn_forgot">Forgot password</button>
+                        </td>
+                        <td>
+                            <button type="button"  id="btn_submit">Submit</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>    
+    </div>
+    
+</body>
+</html>
